@@ -73,34 +73,44 @@ export default function FinderPage() {
       </div>
 
       <div className="space-y-3">
-        <div className="flex flex-wrap gap-2">
-          {benefitFilters.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setBenefit(f.id)}
-              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
-                benefit === f.id
-                  ? "border-green-700 bg-green-700 text-white"
-                  : "border-stone-300 bg-white text-stone-700 hover:border-green-600"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-2">
+            Filter by benefit
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+            {benefitFilters.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setBenefit(f.id)}
+                className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                  benefit === f.id
+                    ? "border-green-700 bg-green-700 text-white"
+                    : "border-stone-300 bg-white text-stone-700 hover:border-green-600"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value as PlaceType | "all")}
-          className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
-          aria-label="Filter by place type"
-        >
-          <option value="all">All place types</option>
-          {Object.entries(typeLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label htmlFor="type-select" className="block text-sm font-medium text-stone-700 mb-2">
+            Filter by place type
+          </label>
+          <select
+            id="type-select"
+            value={type}
+            onChange={(e) => setType(e.target.value as PlaceType | "all")}
+            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+          >
+            <option value="all">All place types</option>
+            {Object.entries(typeLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <p className="text-sm text-stone-500">

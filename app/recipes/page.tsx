@@ -44,18 +44,19 @@ export default function RecipesPage() {
         </p>
       </div>
 
-      <div className="space-y-3">
-        <div>
-          <label className="block text-sm font-medium text-stone-700">
+      <div className="space-y-3 lg:flex lg:gap-4 lg:space-y-0">
+        <div className="lg:w-1/3">
+          <label htmlFor="filter-type" className="block text-sm font-medium text-stone-700 mb-2">
             Filter by
           </label>
           <select
+            id="filter-type"
             value={filterType}
             onChange={(e) => {
               setFilterType(e.target.value as FilterType);
               setFilterValue("");
             }}
-            className="mt-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
           >
             <option value="none">None</option>
             <option value="cost">Cost per serving</option>
@@ -64,58 +65,63 @@ export default function RecipesPage() {
           </select>
         </div>
 
-        {filterType === "cost" && (
-          <div>
-            <label className="block text-sm font-medium text-stone-700">
-              Max cost
-            </label>
-            <input
-              type="number"
-              step="0.25"
-              min="0"
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
-              placeholder="2.00"
-              className="mt-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-        )}
+        <div className="lg:w-1/3">
+          {filterType === "cost" && (
+            <div>
+              <label htmlFor="cost-input" className="block text-sm font-medium text-stone-700 mb-2">
+                Max cost ($)
+              </label>
+              <input
+                id="cost-input"
+                type="number"
+                step="0.25"
+                min="0"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                placeholder="2.00"
+                className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          )}
 
-        {filterType === "time" && (
-          <div>
-            <label className="block text-sm font-medium text-stone-700">
-              Max time (minutes)
-            </label>
-            <input
-              type="number"
-              min="0"
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
-              placeholder="30"
-              className="mt-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-        )}
+          {filterType === "time" && (
+            <div>
+              <label htmlFor="time-input" className="block text-sm font-medium text-stone-700 mb-2">
+                Max time (minutes)
+              </label>
+              <input
+                id="time-input"
+                type="number"
+                min="0"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                placeholder="30"
+                className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          )}
 
-        {filterType === "tag" && (
-          <div>
-            <label className="block text-sm font-medium text-stone-700">
-              Tag
-            </label>
-            <select
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
-              className="mt-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
-            >
-              <option value="">Select a tag</option>
-              {allTags.map((tag) => (
-                <option key={tag} value={tag}>
-                  {tag}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+          {filterType === "tag" && (
+            <div>
+              <label htmlFor="tag-select" className="block text-sm font-medium text-stone-700 mb-2">
+                Tag
+              </label>
+              <select
+                id="tag-select"
+                value={filterValue}
+                onChange={(e) => setFilterValue(e.target.value)}
+                className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+              >
+                <option value="">Select a tag</option>
+                {allTags.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
       </div>
 
       <p className="text-sm text-stone-500">
