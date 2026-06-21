@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NourishAustin (MVP)
 
-## Getting Started
+Web app that helps people in Austin find healthy food nearby and discover low-cost healthy alternatives to what they already buy.
 
-First, run the development server:
+Full product design: [`docs/design/nourishaustin-design.md`](docs/design/nourishaustin-design.md)
+
+## Features (Phase 1)
+
+- **Find Food** (`/finder`) — markets, pantries, groceries, and mobile markets, filterable by SNAP/EBT, WIC, double-value vouchers, and free food.
+- **Smart Swaps** (`/swaps`) — cheaper, healthier alternatives to common grocery items, with per-serving cost and nutrition deltas spelled out.
+- **Budget Recipes** (`/recipes`) — meals filtered by cost per serving and diet tags, including no-stove options.
+
+## Running
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev    # http://localhost:3000
+npm run build  # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Data
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All data currently lives in `lib/data/` as TypeScript seed files:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `places.ts` — Austin food resource listings (illustrative; verify before launch)
+- `foods.ts` — food items + swap pairs (prices are surveyed band midpoints)
+- `recipes.ts` — budget recipes
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Phase 2 will move this into a database with scheduled ingestion from food resource APIs and open data sources.
