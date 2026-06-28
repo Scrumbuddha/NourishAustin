@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 import { places } from "@/lib/data/places";
 import type { Place, PlaceType } from "@/lib/types";
+import { BenefitEligibilityChecker, type EligibilityFilters } from "./benefit-checker";
+import { matchesEligibility } from "@/lib/eligibility-filter";
+import { isOpenNow } from "@/lib/open-now";
 
 const typeLabels: Record<PlaceType, string> = {
   grocery: "Grocery",
@@ -53,13 +56,30 @@ function Badge({ children, tone }: { children: string; tone: "green" | "blue" | 
 export default function FinderPage() {
   const [benefit, setBenefit] = useState<BenefitFilter>("all");
   const [type, setType] = useState<PlaceType | "all">("all");
+  const [eligibilityFilters, setEligibilityFilters] = useState<EligibilityFilters>({
+    hasSNAP: false,
+    hasWIC: false,
+    isStudent: false,
+    isSenior: false,
+    isFormerlyIncarcerated: false,
+    needsNoID: false,
+  });
+  const [showOpenNow, setShowOpenNow] = useState(false);
+  const [checkerExpanded, setCheckerExpanded] = useState(false);
 
   const results = useMemo(
     () =>
-      places.filter(
-        (p) => matchesBenefit(p, benefit) && (type === "all" || p.type === type)
-      ),
-    [benefit, type]
+      places.filter((p) => {
+        if (!matchesBenefit(p, benefit)) return false;
+        if (type !== "all" && p.type !== type) return false;
+        if (!matchesEligibility(p, eligibilityFilters)) return false;
+        if (showOpenNow) {
+          const openStatus = isOpenNow(p.hours);
+          if (openStatus !== true) return false;
+        }
+        return true;
+      }),
+    [benefit, type, eligibilityFilters, showOpenNow]
   );
 
   return (
@@ -71,6 +91,12 @@ export default function FinderPage() {
           paperwork needed at most.
         </p>
       </div>
+
+      <BenefitEligibilityChecker
+        onFiltersChange={setEligibilityFilters}
+        isExpanded={checkerExpanded}
+        onExpandChange={setCheckerExpanded}
+      />
 
       <div className="space-y-3">
         <div>
@@ -93,29 +119,53 @@ export default function FinderPage() {
             ))}
           </div>
         </div>
-        <div>
-          <label htmlFor="type-select" className="block text-sm font-medium text-stone-700 mb-2">
-            Filter by place type
-          </label>
-          <select
-            id="type-select"
-            value={type}
-            onChange={(e) => setType(e.target.value as PlaceType | "all")}
-            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
-          >
-            <option value="all">All place types</option>
-            {Object.entries(typeLabels).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <label htmlFor="type-select" className="block text-sm font-medium text-stone-700 mb-2">
+              Filter by place type
+            </label>
+            <select
+              id="type-select"
+              value={type}
+              onChange={(e) => setType(e.target.value as PlaceType | "all")}
+              className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm"
+            >
+              <option value="all">All place types</option>
+              {Object.entries(typeLabels).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-stone-700 mb-2">Hours</label>
+            <button
+              onClick={() => setShowOpenNow(!showOpenNow)}
+              className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                showOpenNow
+                  ? "border-red-700 bg-red-700 text-white"
+                  : "border-stone-300 bg-white text-stone-700 hover:border-red-600"
+              }`}
+              title="Show only places open right now"
+            >
+              {showOpenNow ? "🔴 Open Now" : "⭕ All Hours"}
+            </button>
+          </div>
         </div>
       </div>
 
-      <p className="text-sm text-stone-500">
-        {results.length} place{results.length === 1 ? "" : "s"} found
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-stone-500">
+          {results.length} place{results.length === 1 ? "" : "s"} found
+          {showOpenNow && " (open right now)"}
+        </p>
+        {showOpenNow && (
+          <p className="text-xs text-red-600">
+            ⏰ Based on current time. Hours may vary—call ahead to confirm.
+          </p>
+        )}
+      </div>
 
       <ul className="space-y-3">
         {results.map((p) => (
