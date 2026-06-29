@@ -988,7 +988,7 @@ export const places: Place[] = [
   {
     id: "wheatsville-coop-guadalupe",
     name: "Wheatsville Food Co-op — Guadalupe Street",
-    type: "grocery-store",
+    type: "grocery",
     address: "3101 Guadalupe St, Austin, TX 78705",
     lat: 30.2807,
     lng: -97.7407,
@@ -1002,7 +1002,7 @@ export const places: Place[] = [
   {
     id: "wheatsville-coop-south-lamar",
     name: "Wheatsville Food Co-op — South Lamar",
-    type: "grocery-store",
+    type: "grocery",
     address: "4001 S Lamar Blvd, Austin, TX 78704",
     lat: 30.2368,
     lng: -97.7644,
